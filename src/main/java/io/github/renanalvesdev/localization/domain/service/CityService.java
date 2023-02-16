@@ -8,10 +8,12 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import io.github.renanalvesdev.localization.domain.entity.City;
 import io.github.renanalvesdev.localization.domain.repository.CityRepository;
+import io.github.renanalvesdev.localization.domain.repository.specs.CitySpecs;
 
 @Service
 public class CityService {
@@ -48,6 +50,11 @@ public class CityService {
 		Example<City> example = Example.of(city, matcher);
 		
 		return repository.findAll(example);
+	}
+	
+	public void listByNameSpec() {
+		Specification<City> spec = CitySpecs.nameEqual("Porto").and(CitySpecs.habitantsGreaterThan(1000));
+		repository.findAll(spec).forEach(System.out::println);
 	}
 	
 	
