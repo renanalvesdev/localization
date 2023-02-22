@@ -11,7 +11,7 @@ public class CitySpecs {
 		return (root, query, cb) -> cb.equal(root.get("name"), name);
 	}
 	
-	public static Specification<City> habitantsGreaterThan(Integer value){
+	public static Specification<City> habitantsGreaterThan(Long value){
 		return (root, query, cb) -> cb.greaterThan(root.get("habitants"), value);
 	}
 	

@@ -10,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import io.github.renanalvesdev.localization.domain.entity.City;
 import io.github.renanalvesdev.localization.domain.repository.CityRepository;
@@ -53,10 +54,26 @@ public class CityService {
 	}
 	
 	public void listByNameSpec() {
-		Specification<City> spec = CitySpecs.nameEqual("Porto").and(CitySpecs.habitantsGreaterThan(1000));
+		Specification<City> spec = CitySpecs.nameEqual("Porto").and(CitySpecs.habitantsGreaterThan(1000L));
 		repository.findAll(spec).forEach(System.out::println);
-	}
+	} 
 	
+	
+	void listSpecsDynamicFilter(City filter) {
+		
+		Specification<City> specs = Specification.where((root, query, cb) -> cb.conjunction());
+		
+		if(filter.getHabitants() != null) {
+			specs = specs.and(CitySpecs.habitantsGreaterThan(filter.getHabitants()));
+		}
+		
+		if(StringUtils.hasText(filter.getName())) {
+			specs = specs.and(CitySpecs.nameEqual(filter.getName()));
+		}
+		
+		repository.findAll(specs).forEach(System.out::println);
+		
+	}
 	
 	
 }
